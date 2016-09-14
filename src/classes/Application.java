@@ -9,59 +9,79 @@ import java.util.*;
 public class Application {
     public static void main(String[] args){
 
-        ListOperator listOperator = new ListOperator();
-
         // Set number of elements.
-        final int COUNT_NEW_ELEMENTS = 500000;
-        final int COUNT_ELEMENTS = 500000;
+        final int COUNT_NEW_ELEMENTS = 1000000;
+        final int COUNT_ELEMENTS = 1000000;
         final int INDEX_NUMBER = COUNT_ELEMENTS / 2;
+        final String WORK_FILE_NAME = "/home/aloginov/input.txt";
+        final String ADDITIONAL_FILE_NAME = "/home/aloginov/add_lines.txt";
 
-        // Create list for insertion.
-        List<String> strings = new ArrayList<>(COUNT_ELEMENTS);
+        ArrayList<String> strings;
 
         long startTime;
         long finishTime;
         long total;
 
-        List<String> list;
+        ArrayList<String> arrayList;
+        LinkedList<String> linkedList;
 
-        for (int i = 0; i < COUNT_NEW_ELEMENTS; i++)
-            strings.add(new StringCreator(1000).getString());
+        ListOperator listOperator;
 
-        // Beginning ArrayList initialization.
-        list = new ArrayList<>(COUNT_ELEMENTS);
-        // Fill beginning ArrayList.
-        list.addAll(strings);
+        // Get initial ArrayList.
+        arrayList = (ArrayList<String>) (new ListOperator(new ArrayList<String>())).getList(WORK_FILE_NAME);
 
-        // Insert elements from strings list and track time.
+        // Get list for insertion.
+        strings = (ArrayList<String>) (new ListOperator(new ArrayList<>())).getList(ADDITIONAL_FILE_NAME);
+
+        /*
+         *  Block for ArrayList.
+         */
+
+        // Insert elements from strings arrayList and track time.
+        listOperator = new ListOperator(arrayList);
         startTime = System.nanoTime();
-        listOperator.insertIntoList(list, strings, INDEX_NUMBER);
+        listOperator.insertIntoList(strings, INDEX_NUMBER);
         finishTime = System.nanoTime();
 
         System.out.printf("ArrayList insert time: %d.\n", finishTime - startTime);
 
+        // Get total numbers of symbols in ArrayList.
         startTime = System.nanoTime();
-        total = listOperator.getTotalChars(list);
+        total = listOperator.getTotalChars();
         finishTime = System.nanoTime();
 
         System.out.printf("Total numbers of ArrayList chars: %d. Result got for %d nanoseconds.\n", total, finishTime - startTime);
 
-        // Beginning LinkedList initialization.
-        list = new LinkedList<>();
-        // Fill beginning LinkedList.
-        list.addAll(strings);
+        arrayList = null;
 
-        // Insert elements from strings list and track time.
+        /*
+         *  End block for ArrayList.
+         */
+
+        /*
+         *  Block for LinkedList.
+         */
+        linkedList = (LinkedList<String>) (new ListOperator(new LinkedList<>())).getList(WORK_FILE_NAME);
+
+        // Insert elements from strings arrayList and track time.
+        listOperator = new ListOperator(linkedList);
         startTime = System.nanoTime();
-        listOperator.insertIntoList(list, strings, INDEX_NUMBER);
+        listOperator.insertIntoList(strings, INDEX_NUMBER);
         finishTime = System.nanoTime();
 
         System.out.printf("LinkedList insert time: %d nanoseconds.\n", finishTime - startTime);
 
+        // Get total numbers of symbols in LinkedList.
         startTime = System.nanoTime();
-        total = listOperator.getTotalChars(list);
+        total = listOperator.getTotalChars();
         finishTime = System.nanoTime();
 
         System.out.printf("Total numbers of LinkedList chars: %d. Result got for %d nanoseconds.\n", total, finishTime - startTime);
+
+        linkedList = null;
+        strings = null;
+        /*
+         *  End block for LinkedList.
+         */
     }
 }
