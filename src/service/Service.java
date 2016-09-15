@@ -13,8 +13,8 @@ public class Service {
 
     public static void createInitialFiles(){
 
-        final int COUNT_NEW_ELEMENTS = 1000000;
-        final int COUNT_ELEMENTS = 1000000;
+        final int COUNT_NEW_ELEMENTS = 500000;
+        final int COUNT_ELEMENTS = 500000;
         // final int INDEX_NUMBER = COUNT_ELEMENTS / 2;
         final String MAIN_FILE_NAME = "/home/aloginov/input.txt";
         final String ADDITIONAL_FILE_NAME = "/home/aloginov/add_lines.txt";

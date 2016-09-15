@@ -39,14 +39,12 @@ public class ListOperator {
         FileManager file = new FileManager(fileName);
         file.openFileForOutput();
         file.writeListToFile(this.list);
-        file.close();
     }
 
     public void getFromFile(String fileName){
         FileManager file = new FileManager(fileName);
         file.openFileForInput();
         file.readFileToList(list);
-        file.close();
     }
 
     public Long getTotalChars(){

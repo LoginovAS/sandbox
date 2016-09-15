@@ -2,6 +2,7 @@ package classes;
 
 import java.io.*;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Created by aloginov on 14.09.16.
@@ -9,8 +10,9 @@ import java.util.List;
 public class FileManager {
 
     private File file;
-    private BufferedReader in;
     private BufferedWriter out;
+    private FileInputStream inputStream;
+    private Scanner scanner;
 
     public FileManager(String fileName){
         this.file = new File(fileName);
@@ -26,7 +28,8 @@ public class FileManager {
 
         if (isFileExists()){
             try {
-                this.in = new BufferedReader(new FileReader(file));
+                this.inputStream = new FileInputStream(file);
+                this.scanner = new Scanner(inputStream);
             } catch (IOException ex){
                 System.err.println(ex);
             }
@@ -53,13 +56,14 @@ public class FileManager {
 
     public void readFileToList(List<String> list){
 
-        String s;
         try {
-            while ((s = in.readLine()) != null){
-                list.add(s);
+            while (scanner.hasNextLine()){
+                list.add(scanner.nextLine());
             }
-        } catch (IOException ex) {
-            System.err.println(ex);
+        } finally {
+            if (scanner != null){
+                scanner.close();
+            }
         }
 
     }
@@ -73,35 +77,16 @@ public class FileManager {
             }
         } catch (IOException ex) {
             System.err.println(ex);
-        }
-
-    }
-
-    public void close(){
-        if (out != null) {
-            closeFile(out);
-            out = null;
-        }
-        else if (in != null) {
-            closeFile(in);
-            in = null;
-        }
-    }
-
-    private void closeFile(Object object){
-        if (object instanceof Reader){
-            try{
-                in.close();
-            } catch (IOException ex) {
-                System.err.println(ex);
-            }
-        } else if (object instanceof Writer){
-            try {
-                out.close();
-            } catch (IOException ex) {
-                System.err.println(ex);
+        } finally {
+            if (out != null){
+                try {
+                    out.close();
+                } catch (IOException ex) {
+                    System.err.println(ex);
+                }
             }
         }
+
     }
 
     private boolean isFileExists(){
