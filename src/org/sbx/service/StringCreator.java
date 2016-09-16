@@ -1,4 +1,4 @@
-package classes;
+package org.sbx.service;
 
 import java.util.Random;
 

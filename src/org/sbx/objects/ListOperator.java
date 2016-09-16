@@ -1,7 +1,8 @@
-package classes;
+package org.sbx.objects;
+
+import org.sbx.managers.FileManager;
 
 import java.util.*;
-import java.io.File;
 
 /**
  * Created by aloginov on 13.09.16.
@@ -15,24 +16,28 @@ public class ListOperator {
     public ListOperator(){ }
 
     public ListOperator(List<String> list){
+        this.total = 0;
         this.list = list;
     }
 
-    public List<String> getList(){
+    public List<String> get(){
         return list;
     }
 
-    public List<String> getList(String fileName){
-        getFromFile(fileName);
+    @Deprecated
+    public List<String> get(String fileName){
+        loadFromFile(fileName);
         return list;
     }
 
-    public void insertIntoList(List<String> strings, int index){
-        System.out.println(list == strings);
+    public <T extends List<String>>void insertIntoList(T strings, int index){
         Iterator<String> iterator = strings.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext())
             list.add(index, iterator.next());
-        }
+    }
+
+    public <T extends List<String>>void addAllIntoList(T strings, int index){
+        list.addAll(index, strings);
     }
 
     public void writeToFile(String fileName){
@@ -41,7 +46,7 @@ public class ListOperator {
         file.writeListToFile(this.list);
     }
 
-    public void getFromFile(String fileName){
+    public void loadFromFile(String fileName){
         FileManager file = new FileManager(fileName);
         file.openFileForInput();
         file.readFileToList(list);

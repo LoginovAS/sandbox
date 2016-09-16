@@ -1,4 +1,4 @@
-package classes;
+package org.sbx.managers;
 
 import java.io.*;
 import java.util.List;
@@ -54,7 +54,7 @@ public class FileManager {
 
     }
 
-    public void readFileToList(List<String> list){
+    public <T extends List<String>>void readFileToList(T list){
 
         try {
             while (scanner.hasNextLine()){
@@ -68,7 +68,7 @@ public class FileManager {
 
     }
 
-    public void writeListToFile(List<String> list){
+    public <T extends List<String>>void writeListToFile(T list){
 
         try {
             for (String s: list){
