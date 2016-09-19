@@ -1,8 +1,6 @@
-package service;
+package org.sbx.service;
 
-import classes.ListOperator;
-import classes.StringCreator;
-
+import org.sbx.objects.ListOperator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +11,8 @@ public class Service {
 
     public static void createInitialFiles(){
 
-        final int COUNT_NEW_ELEMENTS = 500000;
-        final int COUNT_ELEMENTS = 500000;
+        final int COUNT_NEW_ELEMENTS = 500;
+        final int COUNT_ELEMENTS = 500;
         // final int INDEX_NUMBER = COUNT_ELEMENTS / 2;
         final String MAIN_FILE_NAME = "/home/aloginov/input.txt";
         final String ADDITIONAL_FILE_NAME = "/home/aloginov/add_lines.txt";
