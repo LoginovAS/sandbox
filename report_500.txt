@@ -1,8 +1,0 @@
-Insert time by element for class java.util.ArrayList: 781017ns
-Total numbers of chars for class java.util.ArrayList: 1000000. Result got for 312472ns
-Insert time by element for class java.util.LinkedList: 4606942ns
-Total numbers of chars for class java.util.LinkedList: 1000000. Result got for 787078ns
-Insert time with addAll() for class java.util.ArrayList: 67175ns
-Insert time with addAll() for class java.util.LinkedList: 125134ns
-Insert time to the end for class java.util.ArrayList: 177894ns
-Insert time to the end for class java.util.LinkedList: 118282ns

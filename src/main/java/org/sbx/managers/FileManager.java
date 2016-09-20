@@ -3,17 +3,21 @@ package org.sbx.managers;
 import java.io.*;
 import java.util.List;
 import java.util.Scanner;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Created by aloginov on 14.09.16.
  */
 public class FileManager {
 
+    private static final Logger logger = LogManager.getLogger(FileManager.class);
+
     private File file;
     private PrintStream out;
     private FileInputStream inputStream;
     private Scanner scanner;
-    private boolean append;
+    private Boolean append;
     private boolean success;
 
     public FileManager(String fileName){
@@ -26,6 +30,7 @@ public class FileManager {
     public void openFileForInput(){
 
         if (!isFileExists()){
+            logger.warn(LoggerManager.FILE_NOT_EXISTS, file.getAbsolutePath(), LoggerManager.WILL_CREATE_FILE);
             createNewFile();
         }
 
@@ -38,10 +43,12 @@ public class FileManager {
                     this.success = true;
                 }
             } catch (IOException ex){
-                System.err.println(ex);
+                logger.error(ex);
             } finally {
-                if (!success){
-                    System.err.println("Input file cannot be oppened.");
+                if (success)
+                    logger.debug(LoggerManager.FILE_OPENED, file.getAbsolutePath(), "read");
+                else{
+                    logger.error(LoggerManager.CANNOT_OPEN_FILE, file.getAbsolutePath(), "read");
                 }
             }
         } else
@@ -49,11 +56,14 @@ public class FileManager {
 
     }
 
-    public void openFileForOutput(boolean append){
+    public boolean openFileForOutput(boolean append){
 
         this.append = append;
 
+        logger.debug(LoggerManager.FLAG_VALUE, "append", append);
+
         if (!isFileExists()){
+            logger.warn(LoggerManager.FILE_NOT_EXISTS, file.getAbsolutePath(), LoggerManager.WILL_CREATE_FILE);
             createNewFile();
         }
 
@@ -68,14 +78,17 @@ public class FileManager {
                     this.success = true;
                 }
             } catch (IOException ex) {
-                System.err.println(ex);
+                logger.error(ex);
             } finally {
-                if (!success){
-                    System.err.println("File cannot be out for output.");
+                if (success)
+                    logger.debug(LoggerManager.FILE_OPENED, file.getAbsolutePath(), "write");
+                else{
+                    logger.error(LoggerManager.CANNOT_OPEN_FILE, file.getAbsolutePath(), "write");
                 }
             }
         }
 
+        return success;
     }
 
     public <T extends List<String>>void readFileToList(T list){
@@ -94,8 +107,9 @@ public class FileManager {
 
     public <T extends List<String>>void writeListToFile(T list){
 
-            for (String s: list)
-                out.println(s);
+        for (String s: list)
+            out.println(s);
+        out.close();
 
     }
 
@@ -106,8 +120,11 @@ public class FileManager {
 
     private boolean isFileExists(){
         boolean f = false;
-        if (this.file.exists())
+        if (this.file.exists()){
             f = true;
+            logger.info(LoggerManager.FILE_EXISTS, file.getAbsolutePath());
+        } else
+            logger.warn(LoggerManager.FILE_NOT_EXISTS, file.getAbsolutePath(), "");
 
         return f;
     }
@@ -115,10 +132,17 @@ public class FileManager {
     private void createNewFile(){
 
         if (!isFileExists()){
+            boolean s = false;
             try {
                 file.createNewFile();
+                s = true;
             } catch (IOException ex) {
-                System.err.println(ex);
+                logger.error(ex);
+            } finally {
+                if (s)
+                    logger.info(LoggerManager.FILE_CREATED, file.getAbsolutePath());
+                else
+                    logger.error(LoggerManager.CANNOT_CREATE_FILE, file.getAbsolutePath());
             }
         }
 

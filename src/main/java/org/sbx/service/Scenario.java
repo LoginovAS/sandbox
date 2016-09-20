@@ -1,6 +1,9 @@
 package org.sbx.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.sbx.managers.FileManager;
+import org.sbx.managers.LoggerManager;
 import org.sbx.objects.ListOperator;
 
 import java.util.ArrayList;
@@ -12,11 +15,9 @@ import java.util.List;
  */
 public class Scenario {
 
+    private static final Logger logger = LogManager.getLogger(Scenario.class);
+
     // Set number of elements.
-    final int COUNT_NEW_ELEMENTS = 100000;
-    final int COUNT_ELEMENTS = 100000;
-    final int INDEX_NUMBER = COUNT_ELEMENTS / 2;
-    final String REPORT_FILE_NAME = "/home/aloginov/private/java/files/report.txt";
 
     long startTime;
     long finishTime;
@@ -29,7 +30,7 @@ public class Scenario {
          * The method takes an ArrayList from the file and
          * returns it to requester.
          */
-        listOperator = new ListOperator(new ArrayList<>());
+        listOperator = new ListOperator(new ArrayList<String>());
         listOperator.loadFromFile(fileName);
         return (ArrayList<String>) listOperator.get();
     }
@@ -39,7 +40,7 @@ public class Scenario {
          * The method takes a LinkedList from the file and
          * returns it to requester.
          */
-        listOperator = new ListOperator(new LinkedList<>());
+        listOperator = new ListOperator(new LinkedList<String>());
         listOperator.loadFromFile(fileName);
         return (LinkedList<String>) listOperator.get();
     }
@@ -50,12 +51,9 @@ public class Scenario {
          * one list to the middle of another one, one by one.
          */
         startTime = System.nanoTime();
-        new ListOperator(mainList).insertIntoList(additionList, INDEX_NUMBER);
+        new ListOperator(mainList).insertIntoList(additionList, mainList.size() / 2);
         finishTime = System.nanoTime();
-        System.out.printf("Insert time by element for %s: %d.\n", mainList.getClass(), finishTime - startTime);
-        FileManager file = new FileManager(REPORT_FILE_NAME);
-        file.openFileForOutput(true);
-        file.writeToFile("Insert time by element for " + mainList.getClass() + ": " + (finishTime - startTime) + "ns");
+        logger.info(LoggerManager.INSERT_TIME_BY_ELEMENT, mainList.getClass(), finishTime - startTime);
     }
 
     public void addWithAddAll(List<String> mainList, List<String> additionList){
@@ -64,12 +62,9 @@ public class Scenario {
          * one list to the middle of another using addAll() method.
          */
         startTime = System.nanoTime();
-        new ListOperator(mainList).addAllIntoList(additionList, INDEX_NUMBER);
+        new ListOperator(mainList).addAllIntoList(additionList, mainList.size() / 2);
         finishTime = System.nanoTime();
-        System.out.printf("Insert time with addAll(): %d.\n", finishTime - startTime);
-        FileManager file = new FileManager(REPORT_FILE_NAME);
-        file.openFileForOutput(true);
-        file.writeToFile("Insert time with addAll() for " + mainList.getClass() + ": " + (finishTime - startTime) + "ns");
+        logger.info(LoggerManager.INSERT_TIME_ADDALL, mainList.getClass(), finishTime - startTime);
     }
 
     public void addToEnd(List<String> mainList, List<String> additionList){
@@ -80,10 +75,7 @@ public class Scenario {
         startTime = System.nanoTime();
         new ListOperator(mainList).insertIntoList(additionList);
         finishTime = System.nanoTime();
-        System.out.printf("Insert time to the end for %s: %d.\n", mainList.getClass(), finishTime - startTime);
-        FileManager file = new FileManager(REPORT_FILE_NAME);
-        file.openFileForOutput(true);
-        file.writeToFile("Insert time to the end for " + mainList.getClass() + ": " + (finishTime - startTime) + "ns");
+        logger.info(LoggerManager.INSERT_TIME_TO_END, mainList.getClass(), finishTime - startTime);
     }
 
     public void getTotalChars(List<String> list){
@@ -96,8 +88,6 @@ public class Scenario {
         total = new ListOperator(list).getTotalChars();
         finishTime = System.nanoTime();
         System.out.printf("Total numbers of list chars: %d. Result got for %d nanoseconds.\n", total, finishTime - startTime);
-        FileManager file = new FileManager(REPORT_FILE_NAME);
-        file.openFileForOutput(true);
-        file.writeToFile("Total numbers of chars for " + list.getClass() + ": " + total + ". Result got for " + (finishTime - startTime) + "ns");
+        logger.info(LoggerManager.TOTAL_CHARS, list.getClass(), total, LoggerManager.GET_RESULT_TIME, finishTime - startTime);
     }
 }
